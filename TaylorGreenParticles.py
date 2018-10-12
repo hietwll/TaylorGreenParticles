@@ -27,7 +27,6 @@ class TaylorGreen():
         self.taup = self.rho*self.dp**2/18.0/self.vis #particle relax time
         self.cfl = 0.5
         self.dt = self.h/1.0*self.cfl # initial time step
-        self.save = 10 # how long to save fig
         self.u = np.zeros((self.ng,self.ng)) # fluid velocity
         self.v = np.zeros((self.ng,self.ng))
         self.omega = np.zeros((self.ng,self.ng))
@@ -68,6 +67,7 @@ class TaylorGreen():
         axes.set_yticklabels(tickla,minor=False)
         axes.tick_params(axis='both',direction='in',which='both',right=True,top=True,width=0.2,length=2.0)
         cf = axes.contourf(self.xmesh,self.ymesh,var,np.linspace(-1.0,1.0,50,endpoint=True),cmap='rainbow',extend='both')
+        sc = axes.scatter(self.xp,self.yp,color='k',s=5,marker='.',edgecolors='none')
         p = axes.get_position().get_points().flatten()
         ax_cbar = self.fig.add_axes([p[2]+0.02,p[1],0.016,p[3]-p[1]])
         cbar = plt.colorbar(cf,cax=ax_cbar,orientation='vertical')
@@ -76,6 +76,7 @@ class TaylorGreen():
         cbar.ax.set_yticklabels(tickla2)
         axes.set_xlabel(r'X')
         axes.set_ylabel(r'Y')
+        return cf,sc
 
     def deriv(self,vin,ax):
         #ax 0 = y, 1 = x
@@ -123,37 +124,36 @@ class TaylorGreen():
         self.dt = self.h/max_u*self.cfl
         print('max u = {:.3f}  dt = {:.3f}  i = {:d} '.format(max_u,self.dt,i))
 
-    def update(self,i):
+    def update(self,i,cf1,cf2,sc1,sc2,nsave):
         self.UpdateDt(i)
         self.t = self.t + self.dt
         self.UpdateFluid()
         self.UpdatePar()
         labels = r'$\tau_p$ : {:.3f}   $\Delta t$  :  {:.3e}   t : {:.3f}    i : {:d}  '.format(self.taup,self.dt,self.t,i)
-        # print(labels)
-        cf1 = self.axes1.contourf(self.xmesh,self.ymesh,self.u,np.linspace(-1.0,1.0,50),cmap='rainbow',extend='both')
-        sc1 = self.axes1.scatter(self.xp,self.yp,color='k',s=5,marker='.',edgecolors='none')
-        cf2 = self.axes2.contourf(self.xmesh,self.ymesh,self.omega,np.linspace(-1.0,1.0,50),cmap='rainbow',extend='both')
-        sc2 = self.axes2.scatter(self.xp,self.yp,color='k',s=5,marker='.',edgecolors='none')
         title = self.fig.suptitle(labels)
-
+        cf1.set_array(self.u)
+        cf2.set_array(self.omega)
+        sc1.set_offsets(np.c_[self.xp,self.yp])
+        sc2.set_offsets(np.c_[self.xp,self.yp])
         # save fig
-        if i%self.save == 0:
+        if i%nsave == 0:
             dirs = 'tau_p_{:.2f}'.format(self.taup)
             plt.savefig(dirs+'/'+str(i).zfill(4)+'.png')
+        return title
 
-        return cf1,sc1,cf2,sc2,title
 
-
-    def ShowAnimation(self,nt,show):
-        self.ShowInit(self.axes1,self.u,r'$u$')
-        self.ShowInit(self.axes2,self.omega,r'$\omega$')
+    def ShowAnimation(self,nt,nsave):
+        cf1,sc1=self.ShowInit(self.axes1,self.u,r'$u$')
+        cf2,sc2=self.ShowInit(self.axes2,self.omega,r'$\omega$')
         # figure out put dir
         dirs = 'tau_p_{:.2f}'.format(self.taup)
         if os.path.isdir(dirs):
             shutil.rmtree(dirs)
         os.makedirs(dirs)
-        ani = animation.FuncAnimation(fig=self.fig,func=self.update,frames=nt,repeat=False,interval=1,save_count=1)
+        ani = animation.FuncAnimation(fig=self.fig,func=self.update,fargs=(cf1,cf2,sc1,sc2,nsave, ),frames=nt,repeat=False,interval=1,save_count=1,blit=0)
         plt.show()
+
+        # here we do not use the default save, because we want to skip some frames
         # ani.save('test.gif')
         self.CreateGif(dirs)
 
@@ -161,14 +161,14 @@ class TaylorGreen():
         ow = os.walk(dirs)
         _,_,files = next(ow)
         tms = sorted(list(map(lambda x: int(x.split('.')[0]),files)))
-        with imageio.get_writer('tau_p_{:.2f}'.format(self.taup)+'.gif', fps=5) as writer:
+        with imageio.get_writer('tau_p_{:.2f}'.format(self.taup)+'.gif', fps=1) as writer:
             for i in tms:
                 image = imageio.imread(dirs+"\\"+str(i).zfill(4)+'.png')
                 writer.append_data(image)
         writer.close()
 
 tg = TaylorGreen()
-tg.ShowAnimation(1000,0)
+tg.ShowAnimation(500,10)
 
 
 
