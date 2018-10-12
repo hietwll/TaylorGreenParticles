@@ -39,7 +39,7 @@ The particle dispersed in fluid experiences a hydrodynamic force, and this force
 - If we define the particle relaxation time as ![tau_p](http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Ctau_%7Bp%7D%3D%5Crho_%7Bp%7Dd_%7Bp%7D%5E2/18%5Cnu), we can get:
 
 <p align="center">
-<img align="center" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cfrac%7Bd%5Cmathbf%7BV%7D_p%7D%7Bdt%7D%3D%5Cfrac%7B%5Cbeta%7D%7B%5Ctau_p%7D%28%5Cmathbf%7BU%7D_f-%5Cmathbf%7BV%7D_p%29"><br>
+<img align="center" height="20" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cfrac%7Bd%5Cmathbf%7BV%7D_p%7D%7Bdt%7D%3D%5Cfrac%7B%5Cbeta%7D%7B%5Ctau_p%7D%28%5Cmathbf%7BU%7D_f-%5Cmathbf%7BV%7D_p%29"><br>
 </p>
 
 - Finally, the particle translation motion (location) is governed by :
@@ -47,13 +47,38 @@ The particle dispersed in fluid experiences a hydrodynamic force, and this force
 <img align="center" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cfrac%7Bd%5Cmathbf%7BX%7D_p%7D%7Bdt%7D%3D%5Cmathbf%7BV%7D_p"><br>
 </p>
 
-In practice, the particle velocity and location is updated by:
+- In practice, the particle velocity and location is updated by:
 
 <p align="center">
 <img align="center" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cbegin%7Balign*%7D%20%5Cmathbf%7BV%7D_p%5E%7Bnew%7D%26%3D%5Cmathbf%7BV%7D_p%5E%7Bold%7D+%5CDelta%20t%20%5Cfrac%7B%5Cbeta%7D%7B%5Ctau_p%7D%28%5Cmathbf%7BU%7D_f%5E%7Bold%7D-%5Cmathbf%7BV%7D_p%5E%7Bold%7D%29%20%5C%5C%20%5Cmathbf%7BX%7D_p%5E%7Bnew%7D%26%3D%5Cmathbf%7BX%7D_p%5E%7Bold%7D+0.5%5CDelta%20t%28%5Cmathbf%7BV%7D_p%5E%7Bnew%7D+%5Cmathbf%7BV%7D_p%5E%7Bold%7D%29%20%5Cend%7Balign*%7D"><br>
 </p>
 
+# Results
+The particle relaxation time (or particle inertia) can be changed by adjusting either ``dp`` or ``rho_p``. Here we give five typical results.
 
+- If ``tau_p = 5.56``, it means particle has small inertia, so it will exactly follow the motion of fluid.
+<p align="center">
+    <img src="https://github.com/hietwll/TaylorGreenParticles/raw/master/gif/tau_p_5.56.gif" width="700"  alt="particles in taylor green vortex"/><br>
+</p>
+
+- If we increase ``tau_p`` to ``555.56``, the particle will have similar inertia with the fluid. There will be a strong competition between the particle and fluid vortex. It turns out that the particle's power is much smaller than the vortex core, so they choose to stay in the edge of the vortexs. 
+<p align="center">
+    <img src="https://github.com/hietwll/TaylorGreenParticles/raw/master/gif/tau_p_555.56.gif" width="700"  alt="particles in taylor green vortex"/><br>
+</p>
+
+- Further increase ``tau_p`` to ``55555.56``, the particles now can cross the outer part of the vortex, but they can still not penetrate into the vortex core. 
+<p align="center">
+    <img src="https://github.com/hietwll/TaylorGreenParticles/raw/master/gif/tau_p_55555.56.gif" width="700"  alt="particles in taylor green vortex"/><br>
+</p>
+
+- Finally, ``tau_p`` is increased to ``277777.78``, now they have much higher inertia than the vortex, so they just freely move in the whole domain. Particles winned!
+<p align="center">
+    <img src="https://github.com/hietwll/TaylorGreenParticles/raw/master/gif/tau_p_277777.78.gif" width="700"  alt="particles in taylor green vortex"/><br>
+</p>
+
+# Contact
+
+Send me an email at zjuwangzhuo@zju.edu.cn (Zhuo Wang) if you have any suggestion.
 
 
 
