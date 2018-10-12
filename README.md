@@ -13,9 +13,9 @@ Motions of particles in Taylor Green vortex with
 
 <br>
 
-## Solving the fluid phase
+## Solve the fluid phase
 The analytical solution for 2D Taylor Green vortex is given by:
- 
+<p align="center">
 <img align="center" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cbegin%7Balign*%7D%20u%28x%2Cy%2Ct%29%26%3D%20sin%28x%29cos%28y%29e%5E%7B-2.0%5Cnu%20t%7D%20%5C%5C%20v%28x%2Cy%2Ct%29%26%3D-cos%28x%29sin%28y%29e%5E%7B-2.0%5Cnu%20t%7D%20%5C%5C%20%5Comega%28x%2Cy%2Ct%29%26%3D%20sin%28x%29sin%28y%29e%5E%7B-2.0%5Cnu%20t%7D%20%5Cend%7Balign*%7D">
-
+</p>
 where ``u``,``v``,``\omega`` are respectively the ``x-velocity``,``y-velocity`` and ``vorticity``.
