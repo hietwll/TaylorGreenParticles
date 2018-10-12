@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# Simulate pa
+# @Date    : 2018-10-12 11:25:18
+# @Author  : etwll (hietwll@gmail.com)
+
 import numpy as np
 import os
 import time
@@ -16,16 +22,16 @@ plt.rcParams["font.serif"] = "Times New Roman"
 
 
 class TaylorGreen():
-    def __init__(self):
+    def __init__(self,arg1,arg2,arg3):
         self.ng = 64 #number of grids
         self.npar = 1000 #number of particles
         self.vis = 1.0/1000.0 # vicosity = 1.0/Re
-        self.dp = 0.1 # particle diameter
-        self.rho = 1000.0 # particle density
+        self.dp = arg1 # particle diameter
+        self.rho = arg2 # particle density
         self.t = 0.0 # time
         self.h = 2.0*pi/(self.ng-1) # grid width
         self.taup = self.rho*self.dp**2/18.0/self.vis #particle relax time
-        self.cfl = 0.5
+        self.cfl = arg3 #cfl number
         self.dt = self.h/1.0*self.cfl # initial time step
         self.u = np.zeros((self.ng,self.ng)) # fluid velocity
         self.v = np.zeros((self.ng,self.ng))
@@ -118,17 +124,18 @@ class TaylorGreen():
         self.yp[self.yp>2.0*pi] = self.yp[self.yp>2.0*pi] - 2.0*pi
         self.yp[self.yp<0] = self.yp[self.yp<0] + 2.0*pi
 
-    def UpdateDt(self,i): # Update timestep based on CFL number
+    def UpdateDt(self,i,j): # Update timestep based on CFL number
         max_u = max(np.max(np.abs(self.up)),np.max(np.abs(self.vp)))
         assert max_u < 1000 ,'Divegence reached!!! Max velocity : {:.3f}'.format(max_u)
         self.dt = self.h/max_u*self.cfl
-        print('max u = {:.3f}  dt = {:.3f}  i = {:d} '.format(max_u,self.dt,i))
+        print('max u = {:.3f}  dt = {:.3f}  i = {:d}  j = {:d}'.format(max_u,self.dt,i,j))
 
-    def update(self,i,cf1,cf2,sc1,sc2,nsave):
-        self.UpdateDt(i)
-        self.t = self.t + self.dt
+    def update(self,i,cf1,cf2,sc1,sc2,nsave,substep):
+        for j in range(substep):
+            self.UpdateDt(i,j)
+            self.t = self.t + self.dt
+            self.UpdatePar()
         self.UpdateFluid()
-        self.UpdatePar()
         labels = r'$\tau_p$ : {:.3f}   $\Delta t$  :  {:.3e}   t : {:.3f}    i : {:d}  '.format(self.taup,self.dt,self.t,i)
         title = self.fig.suptitle(labels)
         cf1.set_array(self.u)
@@ -138,11 +145,11 @@ class TaylorGreen():
         # save fig
         if i%nsave == 0:
             dirs = 'tau_p_{:.2f}'.format(self.taup)
-            plt.savefig(dirs+'/'+str(i).zfill(4)+'.png')
+            plt.savefig(dirs+'/'+str(i).zfill(4)+'.png',dpi=150)
         return title
 
 
-    def ShowAnimation(self,nt,nsave):
+    def ShowAnimation(self,nt,nsave,substep):
         cf1,sc1=self.ShowInit(self.axes1,self.u,r'$u$')
         cf2,sc2=self.ShowInit(self.axes2,self.omega,r'$\omega$')
         # figure out put dir
@@ -150,7 +157,7 @@ class TaylorGreen():
         if os.path.isdir(dirs):
             shutil.rmtree(dirs)
         os.makedirs(dirs)
-        ani = animation.FuncAnimation(fig=self.fig,func=self.update,fargs=(cf1,cf2,sc1,sc2,nsave, ),frames=nt,repeat=False,interval=1,save_count=1,blit=0)
+        ani = animation.FuncAnimation(fig=self.fig,func=self.update,fargs=(cf1,cf2,sc1,sc2,nsave,substep, ),frames=nt+1,repeat=False,interval=1,save_count=1,blit=0)
         plt.show()
 
         # here we do not use the default save, because we want to skip some frames
@@ -161,14 +168,14 @@ class TaylorGreen():
         ow = os.walk(dirs)
         _,_,files = next(ow)
         tms = sorted(list(map(lambda x: int(x.split('.')[0]),files)))
-        with imageio.get_writer('tau_p_{:.2f}'.format(self.taup)+'.gif', fps=1) as writer:
+        with imageio.get_writer('tau_p_{:.2f}'.format(self.taup)+'.gif', fps=4) as writer:
             for i in tms:
                 image = imageio.imread(dirs+"\\"+str(i).zfill(4)+'.png')
                 writer.append_data(image)
         writer.close()
 
-tg = TaylorGreen()
-tg.ShowAnimation(500,10)
+tg = TaylorGreen(0.1,10.0,0.01) # dp ,rho, cfl
+tg.ShowAnimation(200,4,50) # total frame, freq to save frame, sub step for integration
 
 
 
