@@ -6,5 +6,5 @@
 
 <p align="center">
 Motion of particles in Taylor Green vortex with 
-<img width="10" src = "http://latex.codecogs.com/gif.latex?%5Ctau_p%3D555">
+<img width="100" src = "http://latex.codecogs.com/gif.latex?%5Ctau_p%3D555">
 </p>
