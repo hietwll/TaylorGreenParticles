@@ -39,7 +39,7 @@ The particle dispersed in fluid experiences a hydrodynamic force, and this force
 - If we define the particle relaxation time as ![tau_p](http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Ctau_%7Bp%7D%3D%5Crho_%7Bp%7Dd_%7Bp%7D%5E2/18%5Cnu), we can get:
 
 <p align="center">
-<img align="center" height="20" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cfrac%7Bd%5Cmathbf%7BV%7D_p%7D%7Bdt%7D%3D%5Cfrac%7B%5Cbeta%7D%7B%5Ctau_p%7D%28%5Cmathbf%7BU%7D_f-%5Cmathbf%7BV%7D_p%29"><br>
+<img align="center" height="40" src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Cfrac%7Bd%5Cmathbf%7BV%7D_p%7D%7Bdt%7D%3D%5Cfrac%7B%5Cbeta%7D%7B%5Ctau_p%7D%28%5Cmathbf%7BU%7D_f-%5Cmathbf%7BV%7D_p%29"><br>
 </p>
 
 - Finally, the particle translation motion (location) is governed by :
