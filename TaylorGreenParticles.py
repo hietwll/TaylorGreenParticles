@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Simulate particle in Taylor Green Vortex
+# Simulate motions of particles in Taylor Green Vortex
 # @Date    : 2018-10-12 11:25:18
 # @Author  : Zhuo Wang (zjuwangzhuo@zju.edu.cn)
 
