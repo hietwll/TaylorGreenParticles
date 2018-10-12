@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Simulate pa
 # @Date    : 2018-10-12 11:25:18
-# @Author  : etwll (hietwll@gmail.com)
+# @Author  : Zhuo Wang (zjuwangzhuo@zju.edu.cn)
 
 import numpy as np
 import os
