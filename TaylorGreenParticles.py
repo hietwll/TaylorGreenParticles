@@ -55,6 +55,10 @@ class TaylorGreen():
         self.fig , axe = plt.subplots(nrows=1,ncols=2,figsize=(6.0,2.75),dpi=300)
         self.axes1,self.axes2 = axe.flat
         plt.subplots_adjust(left=0.075,hspace=0.1,wspace=0.5,bottom=0.075,right=0.85, top=0.9)
+        self.cf1 = None
+        self.cf2 = None
+        self.cbar1 = None
+        self.cbar2 = None
  
     def ShowInit(self,axes,var,ti):
         axes.set_aspect(1.0)
@@ -82,7 +86,7 @@ class TaylorGreen():
         cbar.ax.set_yticklabels(tickla2)
         axes.set_xlabel(r'X')
         axes.set_ylabel(r'Y')
-        return cf,sc
+        return cf
 
     def deriv(self,vin,ax):
         #ax 0 = y, 1 = x
@@ -130,7 +134,7 @@ class TaylorGreen():
         self.dt = self.h/max_u*self.cfl
         print('max u = {:.3f}  dt = {:.3f}  i = {:d}  j = {:d}'.format(max_u,self.dt,i,j))
 
-    def update(self,i,cf1,cf2,sc1,sc2,nsave,substep):
+    def update(self,i,nsave,substep):
         for j in range(substep):
             self.UpdateDt(i,j)
             self.t = self.t + self.dt
@@ -138,10 +142,16 @@ class TaylorGreen():
         self.UpdateFluid()
         labels = r'$\tau_p$ : {:.3f}   $\Delta t$  :  {:.3e}   t : {:.3f}    i : {:d}  '.format(self.taup,self.dt,self.t,i)
         title = self.fig.suptitle(labels)
-        cf1.set_array(self.u)
-        cf2.set_array(self.omega)
-        sc1.set_offsets(np.c_[self.xp,self.yp])
-        sc2.set_offsets(np.c_[self.xp,self.yp])
+        for f1 in self.cf1.collections:
+            f1.remove()
+        for f2 in self.cf2.collections:
+            f2.remove()
+        self.cf1 = self.axes1.contourf(self.xmesh,self.ymesh,self.u,np.linspace(-1.0,1.0,50,endpoint=True),cmap='rainbow',extend='both')
+        self.cf2 = self.axes2.contourf(self.xmesh,self.ymesh,self.omega,np.linspace(-1.0,1.0,50,endpoint=True),cmap='rainbow',extend='both')
+        # sc1.set_offsets(np.c_[self.xp,self.yp])
+        # sc2.set_offsets(np.c_[self.xp,self.yp])
+        self.axes1.scatter(self.xp,self.yp,color='k',s=5,marker='.',edgecolors='none')
+        self.axes2.scatter(self.xp,self.yp,color='k',s=5,marker='.',edgecolors='none')
         # save fig
         if i%nsave == 0:
             dirs = 'tau_p_{:.2f}'.format(self.taup)
@@ -150,14 +160,14 @@ class TaylorGreen():
 
 
     def ShowAnimation(self,nt,nsave,substep):
-        cf1,sc1=self.ShowInit(self.axes1,self.u,r'$u$')
-        cf2,sc2=self.ShowInit(self.axes2,self.omega,r'$\omega$')
+        self.cf1=self.ShowInit(self.axes1,self.u,r'$u$')
+        self.cf2=self.ShowInit(self.axes2,self.omega,r'$\omega$')
         # figure out put dir
         dirs = 'tau_p_{:.2f}'.format(self.taup)
         if os.path.isdir(dirs):
             shutil.rmtree(dirs)
         os.makedirs(dirs)
-        ani = animation.FuncAnimation(fig=self.fig,func=self.update,fargs=(cf1,cf2,sc1,sc2,nsave,substep, ),frames=nt+1,repeat=False,interval=1,save_count=1,blit=0)
+        ani = animation.FuncAnimation(fig=self.fig,func=self.update,fargs=(nsave,substep, ),frames=nt+1,repeat=False,interval=1,save_count=1,blit=0)
         plt.show()
 
         # here we do not use the default save, because we want to skip some frames
@@ -174,8 +184,8 @@ class TaylorGreen():
                 writer.append_data(image)
         writer.close()
 
-tg = TaylorGreen(0.1,10.0,0.01) # dp ,rho, cfl
-tg.ShowAnimation(200,4,50) # total frame, freq to save frame, sub step for integration
+tg = TaylorGreen(1.0,1000.0,0.5) # dp ,rho, cfl
+tg.ShowAnimation(1000,4,10) # total frame, freq to save frame, sub step for integration
 
 
 
