@@ -158,7 +158,6 @@ class TaylorGreen():
             plt.savefig(dirs+'/'+str(i).zfill(4)+'.png',dpi=150)
         return title
 
-
     def ShowAnimation(self,nt,nsave,substep):
         self.cf1=self.ShowInit(self.axes1,self.u,r'$u$')
         self.cf2=self.ShowInit(self.axes2,self.omega,r'$\omega$')
