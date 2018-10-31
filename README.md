@@ -9,7 +9,7 @@ Motions of particles in Taylor Green vortex with
 <img src = "http://latex.codecogs.com/svg.latex?%5Cinline%20%5Cdpi%7B120%7D%20%5Cfn_cm%20%5Ctau_p%3D555"> <br><br>
 </p>
 
-**TaylorGreenParticles** is a single python script to simulate motions of particles in Taylor Green vortex. The animations can help to understand the phenomenon of preferential concentration of inertial particles in turbulence, see [Preferential concentration](https://en.wikipedia.org/wiki/Preferential_concentration). The fortran code is added by [Guo Chen](None).
+**TaylorGreenParticles** is a single python script to simulate motions of particles in Taylor Green vortex. The animations can help to understand the phenomenon of preferential concentration of inertial particles in turbulence, see [Preferential concentration](https://en.wikipedia.org/wiki/Preferential_concentration). The fortran code is added by [Guo Chen](https://github.com/chenguo960627).
 
 <br>
 
@@ -78,7 +78,7 @@ The particle relaxation time (or particle inertia) can be changed by adjusting e
 
 # Contact
 
-Send me an email at zjuwangzhuo@zju.edu.cn (Zhuo Wang) if you have any suggestion.
+Send me an email at zjuwangzhuo@zju.edu.cn (Zhuo Wang) or 11827039@zju.edu.cn (Guo Chen) if you have any suggestion.
 
 
 
